@@ -99,7 +99,7 @@ def bio_to_spans(tags):
     for i, tag in enumerate(tags):
         if tag == "B-M":
             if start is not None:
-                spans.append((start, i-1))
+                spans.append((start, i))
             start = i
 
         elif tag == "I-M":
@@ -108,10 +108,10 @@ def bio_to_spans(tags):
 
         else:  
             if start is not None:
-                spans.append((start, i-1))
+                spans.append((start, i))
                 start = None
 
     if start is not None:
-        spans.append((start, len(tags)-1))
+        spans.append((start, len(tags)))
 
     return spans

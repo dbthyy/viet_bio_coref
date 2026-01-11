@@ -17,7 +17,7 @@ train = [build_coref(t) for t in train]
 val   = [build_coref(t) for t in val]
 test  = [build_coref(t) for t in test]
 
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, use_fast=True)
 
 encoder = AutoModel.from_pretrained(MODEL_NAME).to(DEVICE)
 encoder.eval()

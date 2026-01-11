@@ -17,7 +17,7 @@ def muc_score(pred_clusters, gold_clusters):
     precision = correct(pred_clusters, gold_clusters) / max(links(pred_clusters), 1e-8)
 
     f1 = 2 * precision * recall / (precision + recall + 1e-8)
-    return precision, recall, f1
+    return f1
 
 def b_cubed_score(pred_clusters, gold_clusters, N):
     gold_map = {}
@@ -43,7 +43,7 @@ def b_cubed_score(pred_clusters, gold_clusters, N):
     precision = p_sum / N
     recall = r_sum / N
     f1 = 2 * precision * recall / (precision + recall + 1e-8)
-    return precision, recall, f1
+    return f1
 
 def ceaf_phi4(pred_clusters, gold_clusters):
     def phi4(c1, c2):
@@ -60,4 +60,4 @@ def ceaf_phi4(pred_clusters, gold_clusters):
     precision = score / max(len(pred_clusters), 1e-8)
     recall = score / max(len(gold_clusters), 1e-8)
     f1 = 2 * precision * recall / (precision + recall + 1e-8)
-    return precision, recall, f1
+    return f1
