@@ -9,6 +9,7 @@ Dự án tập trung vào việc xây dựng một hệ thống **giải quyết
 Mục tiêu là nhận diện các đề cập thực thể (entity mentions) và liên kết các đề cập này thành các cụm thực thể thống nhất xuyên suốt văn bản.
 
 <img width="897" height="364" alt="image" src="https://github.com/user-attachments/assets/eebcfe12-7587-4b34-a45e-b68b9ccde92a" />
+
 ---
 
 ## Kiến trúc Hệ thống
@@ -31,12 +32,14 @@ Hệ thống được xây dựng theo pipeline gồm 2 giai đoạn chính:
 - Gom cụm bằng thuật toán **Union-Find**  
 
 ### 3. Cấu trúc Repository
+```
 .
-├── ner/ # Module nhận diện đề cập (Mention Detection)
-├── coref/ # Module giải quyết đồng tham chiếu
-├── inference/ # Pipeline suy diễn end-to-end
-├── Ablation/ # Thí nghiệm ablation và phân tích
+├── ner/         # Module nhận diện đề cập (Mention Detection)
+├── coref/       # Module giải quyết đồng tham chiếu
+├── inference/   # Pipeline suy diễn end-to-end
+├── Ablation/    # Thí nghiệm ablation và phân tích
 └── README.md
+```
 
 ---
 
@@ -44,6 +47,7 @@ Hệ thống được xây dựng theo pipeline gồm 2 giai đoạn chính:
 
 Hệ thống được đánh giá theo 2 pha:
 - Mention Detection:
+  
 | Model          | Precision | Recall | F1    |
 |----------------|----------|--------|-------|
 | PhoBERT        | **85.96** | **85.49** | **85.73** |
@@ -52,7 +56,9 @@ Hệ thống được đánh giá theo 2 pha:
 | -word seg      | 88.99    | 92.97  | 90.94 |
 | DeBERTa v3     | **90.74** | 91.74  | **91.24** |
 | -word seg      | 88.47    | **92.95** | 90.65 |
+
 - Coreference Resolution:
+  
 | Model              | Setup        | MUC F1 | B³ F1 | CEAF F1 | CoNLL F1 |
 |--------------------|-------------|--------|-------|---------|----------|
 | PhoBERT            | Full        | **96.08** | **40.20** | **50.53** | **62.27** |
@@ -67,12 +73,16 @@ Hệ thống được đánh giá theo 2 pha:
 |                    | -dist       | 92.43  | 50.05 | 55.28   | 65.92 |
 |                    | -same       | 91.99  | 49.29 | 50.56   | 65.28 |
 |                    | -diff       | **93.34** | **51.47** | **57.85** | **67.42** |
+
 - Inference:
+
 | Model          | Setup          | MUC   | B³    | CEAF  | CoNLL |
 |----------------|----------------|-------|-------|-------|-------|
 | PhoBERT        | Full           | 89.35 | 24.89 | 32.25 | 48.83 |
 | XLM-RoBERTa    | Full           | **92.67** | **29.94** | **40.87** | **54.49** |
 | DeBERTa v3     | -diff feature  | 91.30 | 21.34 | 36.97 | 49.87 |
+
+Kết quả suy diễn trên tập kiểm tra cho thấy XLM-RoBERTa đạt hiệu năng tổng thể cao nhất với điểm CoNLL F1 vượt trội so với hai mô hình còn lại.
 
 ---
 
