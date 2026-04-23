@@ -9,12 +9,6 @@ Dự án tập trung vào việc xây dựng một hệ thống **giải quyết
 Mục tiêu là nhận diện các đề cập thực thể (entity mentions) và liên kết các đề cập này thành các cụm thực thể thống nhất xuyên suốt văn bản.
 
 <img width="897" height="364" alt="image" src="https://github.com/user-attachments/assets/eebcfe12-7587-4b34-a45e-b68b9ccde92a" />
-
-Hệ thống được thiết kế theo hướng **huấn luyện mô hình encoder-based**, thay vì sử dụng các mô hình LLM dạng prompt, nhằm:
-- Tăng khả năng kiểm soát mô hình  
-- Giảm chi phí tính toán  
-- Phù hợp với dữ liệu tiếng Việt (ngôn ngữ ít tài nguyên)  
-
 ---
 
 ## Kiến trúc Hệ thống
@@ -36,56 +30,49 @@ Hệ thống được xây dựng theo pipeline gồm 2 giai đoạn chính:
 - Dự đoán xác suất hai mention có cùng thực thể  
 - Gom cụm bằng thuật toán **Union-Find**  
 
----
+### 3. Cấu trúc Repository
+.
+├── ner/ # Module nhận diện đề cập (Mention Detection)
+├── coref/ # Module giải quyết đồng tham chiếu
+├── inference/ # Pipeline suy diễn end-to-end
+├── Ablation/ # Thí nghiệm ablation và phân tích
+└── README.md
 
-## Xử lý dữ liệu
-
-Dữ liệu được tiền xử lý nhằm đảm bảo phù hợp với mô hình học có giám sát:
-
-- Làm sạch văn bản (lowercase, loại bỏ nhiễu)
-- Tách từ tiếng Việt bằng `underthesea`
-- Tokenization theo subword (Transformer tokenizer)
-- Chia dữ liệu theo tỷ lệ:
-  - Train: 70%
-  - Validation: 10%
-  - Test: 20%
-
----
-
-## Thiết kế Mô hình
-
-### Biểu diễn đề cập
-Mỗi mention được biểu diễn bằng vector ngữ nghĩa trích xuất từ hidden states của encoder.
-
-### Đặc trưng sử dụng
-- Embedding của hai mention  
-- Hiệu tuyệt đối (semantic difference)  
-- Khoảng cách vị trí trong văn bản  
-- Đặc trưng so khớp chuỗi (string match)  
-
-### Mô hình học
-- Sử dụng **MLP (Multi-Layer Perceptron)** để tính điểm liên kết giữa các mention  
-- Ngưỡng xác suất được sử dụng để quyết định liên kết  
-
----
-
-## Các mô hình thử nghiệm
-
-Dự án khảo sát nhiều kiến trúc Transformer:
-
-- **PhoBERT**: mô hình đơn ngôn ngữ tiếng Việt  
-- **XLM-RoBERTa**: mô hình đa ngôn ngữ  
-- **DeBERTa v3**: cải tiến attention  
 ---
 
 ## Đánh giá mô hình
 
 Hệ thống được đánh giá theo 2 pha:
-<img width="584" height="319" alt="image" src="https://github.com/user-attachments/assets/18db2c88-fba9-4e91-bbf8-912154bb4a68" />
-<img width="735" height="600" alt="image" src="https://github.com/user-attachments/assets/c09f3e3e-21a7-40e0-875d-57f5fa3d1a39" />
-<img width="802" height="231" alt="image" src="https://github.com/user-attachments/assets/061b084e-1ff5-4748-abc5-c090664136de" />
-
-- XLM-RoBERTa đạt hiệu năng cao nhất trên tập kiểm tra  
+- Mention Detection:
+| Model          | Precision | Recall | F1    |
+|----------------|----------|--------|-------|
+| PhoBERT        | **85.96** | **85.49** | **85.73** |
+| -word seg      | 84.19    | 84.88  | 84.53 |
+| XLM-RoBERTa    | **90.63** | **93.33** | **91.96** |
+| -word seg      | 88.99    | 92.97  | 90.94 |
+| DeBERTa v3     | **90.74** | 91.74  | **91.24** |
+| -word seg      | 88.47    | **92.95** | 90.65 |
+- Coreference Resolution:
+| Model              | Setup        | MUC F1 | B³ F1 | CEAF F1 | CoNLL F1 |
+|--------------------|-------------|--------|-------|---------|----------|
+| PhoBERT            | Full        | **96.08** | **40.20** | **50.53** | **62.27** |
+|                    | -dist       | 92.54  | 39.67 | 48.57   | 60.26 |
+|                    | -same       | 92.55  | 39.54 | 50.48   | 60.86 |
+|                    | -diff       | 87.81  | 37.13 | 42.62   | 55.85 |
+| XLM-RoBERTa        | Full        | **94.33** | 67.64 | **66.08** | **76.02** |
+|                    | -dist       | 93.36  | 66.03 | 62.25   | 73.88 |
+|                    | -same       | 93.79  | **67.77** | 64.95   | 75.50 |
+|                    | -diff       | 89.88  | 64.50 | 58.96   | 71.12 |
+| DeBERTa v3         | Full        | 93.15  | 50.60 | 57.16   | 66.97 |
+|                    | -dist       | 92.43  | 50.05 | 55.28   | 65.92 |
+|                    | -same       | 91.99  | 49.29 | 50.56   | 65.28 |
+|                    | -diff       | **93.34** | **51.47** | **57.85** | **67.42** |
+- Inference:
+| Model          | Setup          | MUC   | B³    | CEAF  | CoNLL |
+|----------------|----------------|-------|-------|-------|-------|
+| PhoBERT        | Full           | 89.35 | 24.89 | 32.25 | 48.83 |
+| XLM-RoBERTa    | Full           | **92.67** | **29.94** | **40.87** | **54.49** |
+| DeBERTa v3     | -diff feature  | 91.30 | 21.34 | 36.97 | 49.87 |
 
 ---
 
@@ -98,4 +85,4 @@ Hệ thống được đánh giá theo 2 pha:
 | 23521563 | Đinh Bảo Thy         | 
 ---
 
-## 🔗 Link paper: 
+## 🔗 Link paper: [Link](https://github.com/dbthyy/viet_bio_coref/blob/e0d4e6b339265f64a6e68daf033770a209392b77/DS310_report.pdf)
