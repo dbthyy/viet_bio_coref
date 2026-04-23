@@ -8,6 +8,8 @@ Môn học DS304 - Xử lý Ngôn ngữ Tự nhiên
 Dự án tập trung vào việc xây dựng một hệ thống **giải quyết đồng tham chiếu (Coreference Resolution)** cho văn bản kể chuyện tiếng Việt.  
 Mục tiêu là nhận diện các đề cập thực thể (entity mentions) và liên kết các đề cập này thành các cụm thực thể thống nhất xuyên suốt văn bản.
 
+<img width="897" height="364" alt="image" src="https://github.com/user-attachments/assets/eebcfe12-7587-4b34-a45e-b68b9ccde92a" />
+
 Hệ thống được thiết kế theo hướng **huấn luyện mô hình encoder-based**, thay vì sử dụng các mô hình LLM dạng prompt, nhằm:
 - Tăng khả năng kiểm soát mô hình  
 - Giảm chi phí tính toán  
@@ -18,6 +20,8 @@ Hệ thống được thiết kế theo hướng **huấn luyện mô hình enco
 ## Kiến trúc Hệ thống
 
 Hệ thống được xây dựng theo pipeline gồm 2 giai đoạn chính:
+
+<img width="1879" height="542" alt="image" src="https://github.com/user-attachments/assets/53442c29-27ea-4385-8ac9-3fa53ce1d2d2" />
 
 ### 1. Nhận diện đề cập (Mention Detection)
 - Bài toán: Sequence Labeling  
@@ -72,52 +76,16 @@ Dự án khảo sát nhiều kiến trúc Transformer:
 - **PhoBERT**: mô hình đơn ngôn ngữ tiếng Việt  
 - **XLM-RoBERTa**: mô hình đa ngôn ngữ  
 - **DeBERTa v3**: cải tiến attention  
-
-👉 **Kết quả tốt nhất: XLM-RoBERTa**
-
 ---
 
 ## Đánh giá mô hình
 
 Hệ thống được đánh giá theo 2 pha:
-
-### Nhận diện đề cập
-- Precision  
-- Recall  
-- F1-score  
-
-### Đồng tham chiếu (theo CoNLL-2012)
-- MUC  
-- B³  
-- CEAFφ4  
-- CoNLL F1  
-
----
-
-## Kết quả chính
+<img width="584" height="319" alt="image" src="https://github.com/user-attachments/assets/18db2c88-fba9-4e91-bbf8-912154bb4a68" />
+<img width="735" height="600" alt="image" src="https://github.com/user-attachments/assets/c09f3e3e-21a7-40e0-875d-57f5fa3d1a39" />
+<img width="802" height="231" alt="image" src="https://github.com/user-attachments/assets/061b084e-1ff5-4748-abc5-c090664136de" />
 
 - XLM-RoBERTa đạt hiệu năng cao nhất trên tập kiểm tra  
-- Word segmentation cải thiện hiệu năng trên tất cả mô hình  
-- Các đặc trưng quan trọng:
-  - Khoảng cách (distance)
-  - Khác biệt ngữ nghĩa (semantic difference)
-
----
-
-## Công nghệ sử dụng
-
-- Python  
-- PyTorch  
-- HuggingFace Transformers  
-- underthesea  
-
----
-
-## Hướng phát triển
-
-- Kết hợp mô hình đơn ngôn ngữ và đa ngôn ngữ  
-- Tích hợp tri thức ngoài văn bản (knowledge graph)  
-- Cải thiện các trường hợp đồng tham chiếu phức tạp  
 
 ---
 
