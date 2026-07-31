@@ -127,4 +127,4 @@ The system was evaluated across three phases: Mention Detection, Coreference Res
 
 ---
 📜 License
-This repository is an academic project created for coursework purposes under course ** DS304 - Natural Language Processing** at the **University of Information Technology (UIT), VNU-HCM**. All rights reserved by the project authors.
+This repository is an academic project created for coursework purposes under course **DS304 - Natural Language Processing** at the **University of Information Technology (UIT), VNU-HCM**. All rights reserved by the project authors.
